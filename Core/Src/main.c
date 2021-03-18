@@ -83,7 +83,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -110,11 +111,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if(HAL_GetTick()>=timestamp){
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-		timesave=HAL_GetTick();
-		timestamp=888888888888888888;
-	}
+//	 switch(state){
+//	 	case 0:
+//	 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+//	 		timestamp=0;
+//	 		w=0;
+//	 	break;
+//	 	case 1:
+//	 	if(HAL_GetTick()>=timestamp){
+//			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+//			timesave=HAL_GetTick();
+//			state=0;
+//	 	}
+//	 	break;
+//	 }
+
+		if(HAL_GetTick()>=timestamp){
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+		}
+
 
     /* USER CODE END WHILE */
 
@@ -327,10 +342,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 		w=1000+((22695477*ADCdata[0])+ADCdata[1])%10000;
 		timestamp=HAL_GetTick()+w;
 		timesave=HAL_GetTick();
+		state=1;
 	}
 	else if (GPIO_Pin==GPIO_PIN_13 && HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)==1){
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-		delta=HAL_GetTick()-timesave;
+//		delta=HAL_GetTick()-timesave;
+
+		delta=HAL_GetTick()-timestamp;
+
+
 	}
 }
 /* USER CODE END 4 */
@@ -343,7 +363,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
+   __disable_irq();
   while (1)
   {
   }
